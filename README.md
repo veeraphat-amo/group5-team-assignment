@@ -429,27 +429,20 @@ LABEL vendor=ACME\ Incorporated \
 
 ### RUN
 
-[Dockerfile reference for the RUN instruction](../../engine/reference/builder.md#run)
+[เอกสารเพิ่มเติมสำหรับ ชุดคำสั่ง RUN ](../../engine/reference/builder.md#run)
 
-Split long or complex `RUN` statements on multiple lines separated with
-backslashes to make your `Dockerfile` more readable, understandable, and
-maintainable.
+การแบ่งคำสั่ง `RUN` เป็นหลายๆบรรทัดด้วยเครื่องหมาย `/` (Backslashe) จะทำให้ `Dockerfile` อ่านสะดวกและง่ายต่อการทำความเข้าใจมากขึ้น 
 
 #### apt-get
 
-Probably the most common use-case for `RUN` is an application of `apt-get`.
-Because it installs packages, the `RUN apt-get` command has several gotchas to
-look out for.
+สื่งที่น่าจะพบได้บ่อยที่สุดในชุดคำสั่ง `RUN` คือ คำสั่ง `apt-get`เนื่องจากมันถูกใช้เพื่อลง package ต่างๆ เพราะฉะนั้นคำสั่ง `RUN apt-get` จึงมีข้อแนะนำและข้อจำกัดบางอย่างที่ควรรู้ 
 
-Avoid `RUN apt-get upgrade` and `dist-upgrade`, as many of the "essential"
-packages from the parent images cannot upgrade inside an
-[unprivileged container](../../engine/reference/run.md#security-configuration). If a package
-contained in the parent image is out-of-date, contact its maintainers. If you
-know there is a particular package, `foo`, that needs to be updated, use
-`apt-get install -y foo` to update automatically.
+ควรหลีกเลี่ยงการเขียน `RUN apt-get upgrade` และ `dist-upgrade` เนื่องจากมี package จำนวนมากใน image parent ที่ไม่สามารถถูก upgrade ภายใน 
+[unprivileged container](../../engine/reference/run.md#security-configuration) ได้ 
 
-Always combine `RUN apt-get update` with `apt-get install` in the same `RUN`
-statement. For example:
+ถ้าคุณมี package ใดๆใน parent image ที่เป็นของเวอร์ชันเก่า ให้คุณติดต่อผู้ดูแล image นั้นๆ เพื่อดำเนินการ และถ้าคุณมี package ที่ต้องการการอัพเดท คุณสามารถใช้คำสั่ง   `apt-get install -y <ชื่อ package>` ได้ทันที
+
+ควรใช้คำสั่ง `RUN apt-get update` และ `apt-get install` ภายในชุดคำสั่ง `RUN` เดียวกันเสมอ เช่น
 
 ```dockerfile
 RUN apt-get update && apt-get install -y \
